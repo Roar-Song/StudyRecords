@@ -86,3 +86,13 @@ Ctrl2는 'name' 이 없지만 자신의 부모 scope로 이동하여 'name' 을 
 ## 3. Isolate Scope
 
 isolate scope는 앞서 설명한 scope와 동일하지만, 모델이나 핸들러를 검색할 경우 그 검색이 상위로 진행되지 않는다는 것이 유일한 차이점입니다. 일반 scope와 달리 isolate scope는 **오직 자신의 scope 내에서만 모델과 핸들러를 찾습니다.** isolate scope를 이용하면 자신만의 독립적인 사용자정의 디렉티브를 만드는데 활용할 수 있습니다.
+
+<br /><br />
+
+## 4. Scope의 LifeCycle
+
+1. 브라우저가 Javascript를 로딩할 때, AngularJS의 **$injector를 통해 정의된 ng-app에 $scope를 할당**한다.
+2. 링킹 과정에서 **$scope 하위에 $watch 오브젝트들이 등록**된다.
+3. 연결된 model의 변화가 감지되면 **\$scope.$apply()** 메서드가 AngularJS 내부에서 호출된다. 작업은 $http, $timeout, $interval 모듈을 이용해서 비동기적으로 이루어진다.
+4. 변화가 감지되면 AngularJs는 $digest cycle을 rootScope 에서 수행한다. 변경 내용은 모든 child Scope로 전파되며 당연히 각 $scope에 정의된 $watch가 이벤트를 전달받는다.
+5. scope 혹은 child Scope가 더이상 필요가 없어지면 \$scope.$destroy가 이루어지며 root Scope에 의한 전파가 중단된다. 중단된 $scope는 향후 가비지 컬렉팅된다.
